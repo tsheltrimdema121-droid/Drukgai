@@ -2,8 +2,11 @@ import { Link } from "@tanstack/react-router";
 
 const links = [
   { to: "/", label: "Home" },
-  { to: "/ikigai", label: "Find Your Ikigai" },
-  { to: "/quiz", label: "Readiness Check" },
+  { to: "/ikigai", label: "Reflect" },
+  { to: "/quiz", label: "Readiness" },
+  { to: "/paths", label: "Paths" },
+  { to: "/stories", label: "Druk Stories" },
+  { to: "/checkin", label: "Check-in" },
   { to: "/insights", label: "Insights" },
   { to: "/about", label: "About" },
 ] as const;
@@ -57,8 +60,10 @@ export function SiteFooter() {
         <div>
           <p className="font-medium text-foreground mb-2">Explore</p>
           <ul className="space-y-1">
-            <li><Link to="/ikigai" className="hover:text-foreground">Find Your Ikigai</Link></li>
+            <li><Link to="/ikigai" className="hover:text-foreground">Reflect (Ikigai)</Link></li>
             <li><Link to="/quiz" className="hover:text-foreground">Readiness Check</Link></li>
+            <li><Link to="/paths" className="hover:text-foreground">Bhutanese Paths</Link></li>
+            <li><Link to="/stories" className="hover:text-foreground">Druk Stories</Link></li>
             <li><Link to="/insights" className="hover:text-foreground">Survey Insights</Link></li>
           </ul>
         </div>

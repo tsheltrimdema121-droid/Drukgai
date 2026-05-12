@@ -22,16 +22,17 @@ function Home() {
         <div className="relative mx-auto max-w-6xl px-5 py-24 md:py-32 grid md:grid-cols-2 gap-12 items-center">
           <div>
             <span className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-card/70 px-3 py-1 text-xs font-medium text-primary backdrop-blur">
-              <span className="size-1.5 rounded-full bg-saffron" /> For Class 12 students in Bhutan
+              <span className="size-1.5 rounded-full bg-saffron" /> Kuzuzangpo · For Class 12 students in Bhutan
             </span>
             <h1 className="mt-6 font-display text-5xl md:text-7xl leading-[1.02] text-foreground">
               What now,<br/>
               <span className="italic text-primary">after Class 12?</span>
             </h1>
             <p className="mt-6 text-lg text-muted-foreground max-w-lg">
-              I built this because I felt lost after my own board exams — and I knew I wasn't alone.
-              Drukgai is a gentle space to find your <em>ikigai</em>, measure how ready you feel,
-              and see what other Bhutanese students are going through.
+              I built Drukgai because I felt lost after my own board exams — and I knew
+              many Bhutanese students feel the same. It is a small, gentle space to find
+              your <em>ikigai</em>, check how ready you feel, and see what other
+              Druk youth are going through.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link to="/ikigai" className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-primary-foreground font-medium shadow-glow hover:opacity-90 transition">
@@ -55,6 +56,9 @@ function Home() {
         </div>
       </section>
 
+      {/* DAILY DRUK WISDOM */}
+      <DailyWisdom />
+
       {/* IKIGAI EXPLAINER */}
       <section className="mx-auto max-w-5xl px-5 py-20">
         <div className="grid md:grid-cols-5 gap-10 items-start">
@@ -76,30 +80,38 @@ function Home() {
       <section className="mx-auto max-w-6xl px-5 pb-20">
         <h2 className="font-display text-3xl md:text-4xl text-center">Three small steps</h2>
         <p className="text-center text-muted-foreground mt-3">Pick whichever feels right today. There's no wrong order.</p>
-        <div className="mt-12 grid md:grid-cols-3 gap-5">
+        <div className="mt-12 grid md:grid-cols-2 lg:grid-cols-4 gap-5">
           <PathCard
             tag="01"
             color="saffron"
-            title="Find your ikigai"
-            body="Reflect on four simple questions and see where your answers overlap."
+            title="Reflect"
+            body="Four small questions to find what you love, do well, and can offer Bhutan."
             to="/ikigai"
             cta="Begin reflection"
           />
           <PathCard
             tag="02"
             color="jade"
-            title="Check your readiness"
-            body="A short quiz to see where you feel confident — and where you'd like support."
+            title="Check readiness"
+            body="A short, kind quiz to see where you feel solid and where you need support."
             to="/quiz"
             cta="Take the check"
           />
           <PathCard
             tag="03"
             color="sky"
-            title="See what others said"
-            body="Explore the survey of 50 Bhutanese students. You're not alone in this."
-            to="/insights"
-            cta="Open insights"
+            title="Explore paths"
+            body="Real Bhutanese career routes — RCSC, RUB, tourism, farming, tech and more."
+            to="/paths"
+            cta="See the paths"
+          />
+          <PathCard
+            tag="04"
+            color="saffron"
+            title="Read stories"
+            body="Notes from Class 12 graduates across all 20 Dzongkhags. Share yours too."
+            to="/stories"
+            cta="Open the wall"
           />
         </div>
       </section>
@@ -156,5 +168,39 @@ function IkigaiDiagram() {
       <text x="265" y="320" fontSize="13" fill="oklch(0.18 0.02 40)" fontWeight="600">What PAYS you</text>
       <text x="200" y="205" textAnchor="middle" fontSize="22" fontFamily="Fraunces, serif" fontStyle="italic" fill="oklch(0.18 0.02 40)">ikigai</text>
     </svg>
+  );
+}
+
+// A small daily-rotating Bhutanese wisdom card. Picks a proverb based on
+// today's date so every student visiting on the same day sees the same one.
+function DailyWisdom() {
+  const wisdoms = [
+    { dz: "ལས་འབྲས་", en: "Karma ripens slowly. Plant good seeds today; the harvest comes in its own time." },
+    { dz: "དགའ་ཚོར་", en: "Happiness is not a destination — it is the path itself. (Gross National Happiness)" },
+    { dz: "བློ་གྲོས་", en: "A wise person climbs the mountain step by step, not in one jump." },
+    { dz: "བཟོད་པ་", en: "Patience is the strongest armour — stronger than any sword." },
+    { dz: "མཐུན་པ་", en: "One bamboo bends, many bamboos make a forest. Lean on your friends and family." },
+    { dz: "དྲང་པོ་", en: "An honest heart sleeps well at night. Choose truth, even when it is hard." },
+    { dz: "རེ་བ་", en: "Hope is a butter lamp — small, but it lights the whole room." },
+    { dz: "འབད་བརྩོན་", en: "Effort never lies. Even slow steps cross a long valley." },
+    { dz: "བྱམས་སྙིང་རྗེ་", en: "Be kind first to yourself. The river must be full before it can give water." },
+    { dz: "ཤེས་རབ་", en: "A book is a good teacher, but life is a better one. Listen to both." },
+  ];
+  const today = new Date();
+  const dayOfYear = Math.floor((today.getTime() - new Date(today.getFullYear(), 0, 0).getTime()) / 86400000);
+  const w = wisdoms[dayOfYear % wisdoms.length];
+
+  return (
+    <section className="mx-auto max-w-4xl px-5 pt-4">
+      <div className="rounded-3xl border border-border bg-card p-7 md:p-9 shadow-soft relative overflow-hidden">
+        <div className="absolute top-0 left-0 right-0 prayer-flags h-1.5" />
+        <div className="flex items-center justify-between">
+          <p className="text-xs uppercase tracking-widest text-primary font-medium">Today's Druk wisdom · ཉིན་གྱི་གཏམ་དཔེ</p>
+          <span className="text-xs text-muted-foreground">{today.toLocaleDateString("en-GB", { day: "numeric", month: "short" })}</span>
+        </div>
+        <p className="mt-4 font-display text-2xl md:text-3xl text-foreground italic leading-snug">"{w.en}"</p>
+        <p className="mt-3 text-sm text-muted-foreground">{w.dz}</p>
+      </div>
+    </section>
   );
 }

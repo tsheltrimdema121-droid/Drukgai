@@ -14,6 +14,36 @@ export type Database = {
   }
   public: {
     Tables: {
+      druk_stories: {
+        Row: {
+          advice: string
+          created_at: string
+          dzongkhag: string
+          id: string
+          name: string
+          status: string
+          story: string
+        }
+        Insert: {
+          advice: string
+          created_at?: string
+          dzongkhag: string
+          id?: string
+          name: string
+          status: string
+          story: string
+        }
+        Update: {
+          advice?: string
+          created_at?: string
+          dzongkhag?: string
+          id?: string
+          name?: string
+          status?: string
+          story?: string
+        }
+        Relationships: []
+      }
       ikigai_reflections: {
         Row: {
           created_at: string
@@ -38,6 +68,30 @@ export type Database = {
           love?: string
           pay?: string
           world?: string
+        }
+        Relationships: []
+      }
+      mood_checkins: {
+        Row: {
+          created_at: string
+          gnh_pillar: string
+          id: string
+          mood: string
+          note: string
+        }
+        Insert: {
+          created_at?: string
+          gnh_pillar: string
+          id?: string
+          mood: string
+          note?: string
+        }
+        Update: {
+          created_at?: string
+          gnh_pillar?: string
+          id?: string
+          mood?: string
+          note?: string
         }
         Relationships: []
       }
