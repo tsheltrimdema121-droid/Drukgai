@@ -14,6 +14,7 @@ import { Route as QuizRouteImport } from './routes/quiz'
 import { Route as PathsRouteImport } from './routes/paths'
 import { Route as InsightsRouteImport } from './routes/insights'
 import { Route as IkigaiRouteImport } from './routes/ikigai'
+import { Route as FestivalsRouteImport } from './routes/festivals'
 import { Route as CheckinRouteImport } from './routes/checkin'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
@@ -43,6 +44,11 @@ const IkigaiRoute = IkigaiRouteImport.update({
   path: '/ikigai',
   getParentRoute: () => rootRouteImport,
 } as any)
+const FestivalsRoute = FestivalsRouteImport.update({
+  id: '/festivals',
+  path: '/festivals',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CheckinRoute = CheckinRouteImport.update({
   id: '/checkin',
   path: '/checkin',
@@ -63,6 +69,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/checkin': typeof CheckinRoute
+  '/festivals': typeof FestivalsRoute
   '/ikigai': typeof IkigaiRoute
   '/insights': typeof InsightsRoute
   '/paths': typeof PathsRoute
@@ -73,6 +80,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/checkin': typeof CheckinRoute
+  '/festivals': typeof FestivalsRoute
   '/ikigai': typeof IkigaiRoute
   '/insights': typeof InsightsRoute
   '/paths': typeof PathsRoute
@@ -84,6 +92,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/checkin': typeof CheckinRoute
+  '/festivals': typeof FestivalsRoute
   '/ikigai': typeof IkigaiRoute
   '/insights': typeof InsightsRoute
   '/paths': typeof PathsRoute
@@ -96,6 +105,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/checkin'
+    | '/festivals'
     | '/ikigai'
     | '/insights'
     | '/paths'
@@ -106,6 +116,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/checkin'
+    | '/festivals'
     | '/ikigai'
     | '/insights'
     | '/paths'
@@ -116,6 +127,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/checkin'
+    | '/festivals'
     | '/ikigai'
     | '/insights'
     | '/paths'
@@ -127,6 +139,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
   CheckinRoute: typeof CheckinRoute
+  FestivalsRoute: typeof FestivalsRoute
   IkigaiRoute: typeof IkigaiRoute
   InsightsRoute: typeof InsightsRoute
   PathsRoute: typeof PathsRoute
@@ -171,6 +184,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IkigaiRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/festivals': {
+      id: '/festivals'
+      path: '/festivals'
+      fullPath: '/festivals'
+      preLoaderRoute: typeof FestivalsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/checkin': {
       id: '/checkin'
       path: '/checkin'
@@ -199,6 +219,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
   CheckinRoute: CheckinRoute,
+  FestivalsRoute: FestivalsRoute,
   IkigaiRoute: IkigaiRoute,
   InsightsRoute: InsightsRoute,
   PathsRoute: PathsRoute,
@@ -208,13 +229,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
