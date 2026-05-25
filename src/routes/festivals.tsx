@@ -1,95 +1,133 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useState } from "react";
 import { SiteHeader, SiteFooter } from "@/components/SiteHeader";
 
 export const Route = createFileRoute("/festivals")({
-  component: FestivalsPage,
+  component: PrayerWheelPage,
   head: () => ({
     meta: [
-      { title: "Tshechu Calendar · Drukgai" },
-      { name: "description", content: "Bhutanese festivals through the year — moments to pause, reflect, and reset on your path." },
+      { title: "Prayer Wheel · Drukgai" },
+      { name: "description", content: "Spin the prayer wheel for a Bhutanese blessing — wisdom from the mountains for your path ahead." },
     ],
   }),
 });
 
-type Festival = {
-  name: string;
+type Blessing = {
   dz: string;
-  month: string;
-  dzongkhag: string;
-  blessing: string;
-  vibe: string;
+  en: string;
+  meaning: string;
+  emoji: string;
 };
 
-const FESTIVALS: Festival[] = [
-  { name: "Punakha Drubchen & Tshechu", dz: "སྤུ་ན་ཁ་གྲུབ་ཆེན", month: "Feb – Mar", dzongkhag: "Punakha", blessing: "Courage to face new beginnings.", vibe: "warriors" },
-  { name: "Paro Tshechu", dz: "སྤ་གྲོ་ཚེས་བཅུ", month: "March – April", dzongkhag: "Paro", blessing: "Clarity in the year ahead.", vibe: "thongdrel" },
-  { name: "Rhododendron Festival", dz: "ཨེ་ཏོ་མེ་ཏོག", month: "April", dzongkhag: "Lamperi", blessing: "Bloom in your own time.", vibe: "spring" },
-  { name: "Nimalung Tshechu", dz: "ཉི་མ་ལུང", month: "June", dzongkhag: "Bumthang", blessing: "Patience builds quiet strength.", vibe: "highland" },
-  { name: "Haa Summer Festival", dz: "ཧཱ་དབྱར་དུས", month: "July", dzongkhag: "Haa", blessing: "Simplicity is a kind of wealth.", vibe: "valley" },
-  { name: "Matsutake Mushroom Festival", dz: "ཤ་མོང", month: "August", dzongkhag: "Ura, Bumthang", blessing: "What you seek is already growing nearby.", vibe: "forest" },
-  { name: "Thimphu Tshechu", dz: "ཐིམ་ཕུག་ཚེས་བཅུ", month: "September – October", dzongkhag: "Thimphu", blessing: "Dance through what scares you.", vibe: "masks" },
-  { name: "Jambay Lhakhang Drup", dz: "བྱམས་པ་ལྷ་ཁང", month: "October – November", dzongkhag: "Bumthang", blessing: "Light a lamp for the road ahead.", vibe: "fire" },
-  { name: "Black-Necked Crane Festival", dz: "བྱ་ཐུང་ཐུང་ནག་པོ", month: "November 11", dzongkhag: "Phobjikha", blessing: "Migrate when the season calls.", vibe: "crane" },
-  { name: "Druk Wangyel Tshechu", dz: "འབྲུག་དབང་རྒྱལ", month: "December 13", dzongkhag: "Dochula", blessing: "Look back with gratitude. Walk forward.", vibe: "passes" },
+const BLESSINGS: Blessing[] = [
+  { dz: "ལམ་ཡག་པོ་འགྲོ", en: "Lam yagpo dro", meaning: "May your path be good. Trust the next small step — even when the valley is full of mist.", emoji: "🏔️" },
+  { dz: "བསམ་པ་འགྲུབ་ཤོག", en: "Sampa drub shog", meaning: "May your wishes ripen. What you water with patience becomes a forest.", emoji: "🌲" },
+  { dz: "ཤེས་རབ་སྐྱེ", en: "Sherab kye", meaning: "May wisdom be born in you. The wise yak knows which slope to climb.", emoji: "🐃" },
+  { dz: "སྙིང་སྟོབས་ལྡན", en: "Nying-tob den", meaning: "May you have courage. The dragon does not roar — it simply flies.", emoji: "🐉" },
+  { dz: "འཁོར་བ་སྐྱིད", en: "Khorwa kyi", meaning: "May your journey be joyful. The road home is also the road forward.", emoji: "🛤️" },
+  { dz: "ཆོས་ཀྱི་སྒྲོན་མེ", en: "Chö kyi drönme", meaning: "Be a lamp of dharma. One honest student lights a whole dzongkhag.", emoji: "🪔" },
+  { dz: "བཟོད་པ་སྒོམ", en: "Zöpa gom", meaning: "Cultivate patience. Rice does not ripen because you shout at it.", emoji: "🌾" },
+  { dz: "རང་ལུགས་སྲུང", en: "Rang-lug sung", meaning: "Honor your own way. A borrowed gho never quite fits.", emoji: "👘" },
+  { dz: "བརྩེ་བ་ཆེན་པོ", en: "Tsewa chenpo", meaning: "Great kindness. Begin with your aama, your friend, the stray dog at the door.", emoji: "🤍" },
+  { dz: "དུས་ལ་བབ", en: "Dü la bab", meaning: "The time has come. The crane does not ask permission to migrate.", emoji: "🕊️" },
+  { dz: "ངོ་ཚ་མེད", en: "Ngo-tsha med", meaning: "Without shame. Ask the question. Apply for the thing. Send the message.", emoji: "✉️" },
+  { dz: "ལས་འབྲས", en: "Lé-dré", meaning: "Cause and fruit. Every honest hour studying is a seed you will eat from later.", emoji: "🌱" },
 ];
 
-function FestivalsPage() {
-  const now = new Date().getMonth();
-  const monthMap: Record<number, string[]> = {
-    0: ["Feb"], 1: ["Feb"], 2: ["March"], 3: ["April"], 4: ["April"],
-    5: ["June"], 6: ["July"], 7: ["August"], 8: ["September"],
-    9: ["October"], 10: ["November"], 11: ["December"],
+function PrayerWheelPage() {
+  const [spinning, setSpinning] = useState(false);
+  const [rotation, setRotation] = useState(0);
+  const [blessing, setBlessing] = useState<Blessing | null>(null);
+  const [count, setCount] = useState(0);
+
+  const spin = () => {
+    if (spinning) return;
+    setSpinning(true);
+    setBlessing(null);
+    const extra = 1440 + Math.floor(Math.random() * 720);
+    setRotation((r) => r + extra);
+    setTimeout(() => {
+      const pick = BLESSINGS[Math.floor(Math.random() * BLESSINGS.length)];
+      setBlessing(pick);
+      setSpinning(false);
+      setCount((c) => c + 1);
+    }, 2400);
   };
-  const upcoming = (f: Festival) => (monthMap[now] ?? []).some((m) => f.month.includes(m));
 
   return (
     <div className="min-h-dvh bg-background">
       <SiteHeader />
-      <main className="mx-auto max-w-5xl px-5 py-12">
-        <header className="mb-10">
-          <p className="font-display text-sm text-primary tracking-wider uppercase">Tshechu · ཚེས་བཅུ</p>
-          <h1 className="font-display text-4xl md:text-5xl text-foreground mt-2">A year of pauses</h1>
-          <p className="mt-4 text-muted-foreground max-w-2xl">
-            In Bhutan, time isn't a straight line — it loops through tshechus, harvests, and crane migrations.
-            Each festival is a chance to stop, breathe, and ask: <em>am I still walking the path I chose?</em>
+      <main className="mx-auto max-w-4xl px-5 py-12">
+        <header className="mb-10 text-center">
+          <p className="font-display text-sm text-primary tracking-wider uppercase">མ་ཎི་འཁོར་ལོ · Mani Khorlo</p>
+          <h1 className="font-display text-4xl md:text-5xl text-foreground mt-2">Spin the Prayer Wheel</h1>
+          <p className="mt-4 text-muted-foreground max-w-2xl mx-auto">
+            In every Bhutanese village, prayer wheels turn — sending blessings into the wind.
+            Spin yours for a wisdom whisper to carry through the day.
           </p>
         </header>
 
-        <div className="grid gap-4 md:grid-cols-2">
-          {FESTIVALS.map((f) => (
-            <article
-              key={f.name}
-              className={`relative rounded-2xl border p-6 shadow-soft transition hover:shadow-lg ${
-                upcoming(f)
-                  ? "border-primary/50 bg-primary/5"
-                  : "border-border/60 bg-card"
-              }`}
+        <div className="flex flex-col items-center gap-8">
+          <button
+            onClick={spin}
+            disabled={spinning}
+            aria-label="Spin the prayer wheel"
+            className="group relative outline-none"
+          >
+            <div
+              className="size-56 md:size-72 rounded-full grid place-items-center shadow-soft border-4 border-primary/30 bg-gradient-to-br from-primary/20 via-warm/30 to-primary/10 transition-transform ease-out"
+              style={{
+                transform: `rotate(${rotation}deg)`,
+                transitionDuration: spinning ? "2400ms" : "0ms",
+              }}
             >
-              {upcoming(f) && (
-                <span className="absolute top-4 right-4 text-xs px-2 py-1 rounded-full bg-primary text-primary-foreground">
-                  This month
-                </span>
-              )}
-              <p className="font-display text-2xl text-foreground">{f.name}</p>
-              <p className="text-muted-foreground text-sm mt-1">{f.dz}</p>
-              <div className="mt-4 flex flex-wrap gap-2 text-xs">
-                <span className="px-2 py-1 rounded-full bg-secondary text-foreground/70">{f.month}</span>
-                <span className="px-2 py-1 rounded-full bg-secondary text-foreground/70">{f.dzongkhag}</span>
+              <div className="absolute inset-3 rounded-full border-2 border-dashed border-primary/40" />
+              <div className="absolute inset-0 grid place-items-center">
+                {[0, 60, 120, 180, 240, 300].map((deg, i) => (
+                  <span
+                    key={i}
+                    className="absolute font-display text-2xl text-primary"
+                    style={{
+                      transform: `rotate(${deg}deg) translateY(-90px) md:translateY(-110px)`,
+                    }}
+                  >
+                    ༀ
+                  </span>
+                ))}
               </div>
-              <blockquote className="mt-4 pl-4 border-l-2 border-primary/40 italic text-foreground/85">
-                "{f.blessing}"
-              </blockquote>
+              <span className="font-display text-5xl md:text-6xl text-foreground relative z-10">
+                ཨོཾ
+              </span>
+            </div>
+            <div className="mt-6 inline-flex items-center gap-2 rounded-full bg-primary text-primary-foreground px-6 py-3 font-display group-hover:scale-105 group-active:scale-95 transition disabled:opacity-60">
+              {spinning ? "Turning..." : blessing ? "Spin again" : "Tap to spin"}
+            </div>
+          </button>
+
+          {count > 0 && (
+            <p className="text-xs text-muted-foreground">
+              You've sent {count} blessing{count === 1 ? "" : "s"} into the wind 🌬️
+            </p>
+          )}
+
+          {blessing && !spinning && (
+            <article className="w-full max-w-xl rounded-2xl border border-primary/30 bg-card p-8 shadow-soft animate-in fade-in slide-in-from-bottom-4 duration-500">
+              <div className="text-5xl text-center mb-3">{blessing.emoji}</div>
+              <p className="font-display text-3xl text-center text-foreground">{blessing.dz}</p>
+              <p className="text-center text-sm text-muted-foreground italic mt-1">{blessing.en}</p>
+              <div className="prayer-flags h-px w-2/3 mx-auto my-5 opacity-70" />
+              <p className="text-center text-foreground/85 leading-relaxed">{blessing.meaning}</p>
             </article>
-          ))}
+          )}
         </div>
 
-        <section className="mt-14 rounded-2xl border border-border/60 bg-secondary/40 p-8 text-center overflow-hidden relative">
+        <section className="mt-16 rounded-2xl border border-border/60 bg-secondary/40 p-8 text-center relative overflow-hidden">
           <div className="prayer-flags h-1 w-full absolute top-0 left-0" />
-          <p className="font-display text-2xl text-foreground">A blessing for the road</p>
-          <p className="mt-3 max-w-2xl mx-auto text-foreground/80">
-            ཀུན་ལ་བདེ་སྐྱིད་ཕུན་སུམ་ཚོགས་པར་ཤོག · May all beings be happy and at ease.
-            Whichever path you choose after Class 12 — engineer, monk, farmer, designer, dzongkhag officer —
-            walk it like you'd walk a tshechu: with care, with company, and with your whole heart.
+          <p className="font-display text-2xl text-foreground">ཨོཾ་མ་ཎི་པདྨེ་ཧཱུྃ</p>
+          <p className="mt-2 text-sm text-muted-foreground">Om Mani Padme Hum</p>
+          <p className="mt-4 max-w-2xl mx-auto text-foreground/80">
+            Each spin is a small act of generosity — for yourself, your classmates, your aama and apa
+            waiting for news of what you'll choose next.
           </p>
         </section>
       </main>
